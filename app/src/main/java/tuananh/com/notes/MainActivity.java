@@ -1,21 +1,14 @@
 package tuananh.com.notes;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.hardware.camera2.params.BlackLevelPattern;
-import android.media.session.PlaybackState;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.DocumentsContract;
-import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,13 +50,13 @@ public class MainActivity extends RootActivity {
 //                id = cursor.getString(cursor.getColumnIndex(Database.Entries._ID));
                 Log.d(TAG, "onResume: "+text);
 //                Log.d(TAG, "onResume: "+id);
-                addNewNote(text);
+                addNoteView(text);
                 cursor.moveToNext();
-            }while (cursor.isAfterLast());
+            }while (!cursor.isAfterLast());
         }
     }
 
-    void addNewNote(String newNote)
+    void addNoteView(String newNote)
     {
         LinearLayout listNotes = (LinearLayout) findViewById(R.id.list_notes);
         TextView note = new TextView(this);

@@ -62,6 +62,7 @@ public class Database extends SQLiteOpenHelper{
 
     public void addNote(String newNote)
     {
+        if(newNote.isEmpty())return;
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Entries.CONTENT,newNote);
