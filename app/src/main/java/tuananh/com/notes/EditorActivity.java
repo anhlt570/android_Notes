@@ -76,7 +76,8 @@ public class EditorActivity extends RootActivity
         if(note.isEmpty()) return true;
 
         for (char c: note.toCharArray()) {
-            if(c!='\n'||c!=10||c!='\t')
+
+            if((c!='\n')&&(c!=' ')&&(c!='\t'))
             {
                 Log.d(TAG, "isEmptyNote: ["+c+"]");
                 return false;
