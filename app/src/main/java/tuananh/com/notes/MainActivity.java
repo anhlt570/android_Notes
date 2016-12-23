@@ -3,6 +3,8 @@ package tuananh.com.notes;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +12,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -42,10 +43,15 @@ public class MainActivity extends RootActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.d(TAG, "onBackPressed: ");
-        System.exit(0);
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     @Override
@@ -74,7 +80,7 @@ public class MainActivity extends RootActivity {
     }
 
 
-    void addNoteView(String newNote, final int noteId)
+    void addNoteView(final String newNote, final int noteId)
     {
         LinearLayout listNotes = (LinearLayout) findViewById(R.id.list_notes);
         final TextView note = new TextView(this);
@@ -91,9 +97,10 @@ public class MainActivity extends RootActivity {
             @Override
             public boolean onLongClick(View view) {
                 Log.d(TAG, "onLongClick: ");
-                RemoveNoteDialog removeNoteDialog= new RemoveNoteDialog();
-                removeNoteDialog.noteId =noteId;
-                removeNoteDialog.show(getFragmentManager(),"");
+                EditNoteDialog editNoteDialog = new EditNoteDialog();
+                editNoteDialog.noteId =noteId;
+                editNoteDialog.noteContent = newNote;
+                editNoteDialog.show(getFragmentManager(),"");
                 return true;
             }
         });
@@ -121,25 +128,60 @@ public class MainActivity extends RootActivity {
         startActivity(intent);
     }
 
-    public class RemoveNoteDialog extends DialogFragment {
+    public class EditNoteDialog extends DialogFragment {
         public int noteId=-1;
+        public String noteContent ="";
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Delete?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+            String[] listOptions = {"Copy","Remove","Edit"};
+            builder.setItems(listOptions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    switch (i)
+                    {
+                        case 0://copy
+                        {
+                           ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                           clipboard.setText(noteContent);
+                           Log.d(TAG, "onClick item: copy");
+
+                            break;
+                        }
+                        case 1://remove
+                        {
                             if(noteId!=-1)
                             myDatabase.removeNote(noteId);
                             loadListNotes();
+                            Log.d(TAG, "onClick item: remove");
+                            break;
                         }
-                    })
-                    .setNegativeButton("Hell no", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
+                        case 2://edit
+                        {
+                            goToEditor(noteContent,noteId);
+                            Log.d(TAG, "onClick item: edit");
+                            break;
                         }
-                    });
+                        default: break;
+                    }
+                }
+            });
+
+//            builder.setMessage("Delete?")
+//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            if(noteId!=-1)
+//                            myDatabase.removeNote(noteId);
+//                            loadListNotes();
+//                        }
+//                    })
+//                    .setNegativeButton("Hell no", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User cancelled the dialog
+//                        }
+//                    });
             // Create the AlertDialog object and return it
             return builder.create();
         }
