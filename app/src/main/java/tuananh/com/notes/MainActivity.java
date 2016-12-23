@@ -90,7 +90,7 @@ public class MainActivity extends RootActivity {
         note.setLayoutParams(layoutParam);
         note.setText(noteContent);
         note.setPadding(10, 20, 0, 20);
-        note.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10);
+        note.setTextSize(TypedValue.COMPLEX_UNIT_PT, 11);
         note.setTextColor(Color.parseColor("#000000"));
         note.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
