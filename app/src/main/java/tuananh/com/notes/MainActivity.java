@@ -96,7 +96,7 @@ public class MainActivity extends RootActivity {
             @Override
             public boolean onLongClick(View view) {
                 Log.d(TAG, "onLongClick: ");
-                showListOptionsDialog(noteId,noteContent);
+                showListOptionsDialog(noteId, noteContent);
                 return true;
             }
         });
@@ -124,8 +124,7 @@ public class MainActivity extends RootActivity {
         finish();
     }
 
-    private void showListOptionsDialog(final int noteId, final String noteContent)
-    {
+    private void showListOptionsDialog(final int noteId, final String noteContent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] listOptions = {"Copy", "Remove", "Edit"};
         builder.setItems(listOptions, new DialogInterface.OnClickListener() {
