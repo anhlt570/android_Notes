@@ -6,18 +6,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 /**
  * Created by anh.letuan2 on 11/14/2016.
  */
 
 public class Database extends SQLiteOpenHelper{
-    public static class Entries implements BaseColumns{
+    public static class Entries{
         public static final String TABLE_NOTES="notes";
         public static final String CONTENT ="content";
+        public static final String ID ="noteId";
+
     }
 
     public static final String SQL_CREATE_TABLE_NOTES       = "Create table "+Entries.TABLE_NOTES+" (" +
+            Entries.ID+ " integer primary key autoincrement,"+
             Entries.CONTENT+" varchar "+
             " );";
     public static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS" +Entries.TABLE_NOTES+" ;";
@@ -54,10 +58,13 @@ public class Database extends SQLiteOpenHelper{
         return cursor;
     }
 
-    public void removeData()
+    public void removeNote(int noteId)
     {
         SQLiteDatabase database = this.getWritableDatabase();
-        database.delete(Entries.TABLE_NOTES,null,null);
+        String selection = Entries.ID +" LIKE ?";
+        String id = ""+noteId;
+        String[] selectionArgs = {id};
+        database.delete(Entries.TABLE_NOTES,selection,selectionArgs);
     }
 
     public void addNote(String newNote)
@@ -69,13 +76,13 @@ public class Database extends SQLiteOpenHelper{
         database.insert(Entries.TABLE_NOTES,null,values);
     }
 
-    public void updateNote(String id, String newNote)
+    public void updateNote(int id, String newNote)
     {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Entries.CONTENT,newNote);
-        String selection = Entries._ID + " like ?";
-        String[] selcectionArgs = {id};
+        String selection = Entries.ID + " like ?";
+        String[] selcectionArgs = {""+id};
         database.update(Entries.TABLE_NOTES,values,selection,selcectionArgs);
     }
 
