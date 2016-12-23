@@ -76,13 +76,18 @@ public class Database extends SQLiteOpenHelper{
         database.insert(Entries.TABLE_NOTES,null,values);
     }
 
-    public void updateNote(int id, String newNote)
+    public void updateNote(int noteId, String newNote)
     {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        if(newNote.isEmpty())
+        {
+            removeNote(noteId);
+            return;
+        }
         values.put(Entries.CONTENT,newNote);
         String selection = Entries.ID + " like ?";
-        String[] selcectionArgs = {""+id};
+        String[] selcectionArgs = {""+noteId};
         database.update(Entries.TABLE_NOTES,values,selection,selcectionArgs);
     }
 

@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".MainActivity"
-            android:noHistory="true">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -19,7 +19,7 @@
 
         <activity android:name=".EditorActivity"
                   android:windowSoftInputMode="stateVisible|adjustPan"
-                  android:noHistory="true">
+                  >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
